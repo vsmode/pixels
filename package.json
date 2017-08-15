@@ -1,1 +1,14 @@
-
+{
+  "name": "@vsmode/pixels",
+  "version": "0.0.1",
+  "dependencies": {
+    "prop-types": "^15.5.10",
+    "react": "next",
+    "react-dom": "next",
+    "react-scripts": "1.0.11",
+    "recompose": "^0.24.0",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.15.6",
+    "styled-components": "^2.1.2"
+  }
+}
