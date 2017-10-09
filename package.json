@@ -1,14 +1,25 @@
 {
   "name": "@vsmode/pixels",
-  "version": "0.0.1",
+  "description": "A minimal cross-platform pixel editor",
+  "version": "0.0.0",
   "dependencies": {
-    "prop-types": "^15.5.10",
-    "react": "next",
-    "react-dom": "next",
-    "react-scripts": "1.0.11",
-    "recompose": "^0.24.0",
-    "redux": "^3.7.2",
-    "redux-saga": "^0.15.6",
-    "styled-components": "^2.1.2"
+    "ramda": "0.24.1",
+    "react": "16.0.0-beta.5",
+    "react-dom": "16.0.0-beta.5",
+    "react-fastclick": "^3.0.2",
+    "recompose": "0.25.0",
+    "redux": "3.7.2",
+    "redux-saga": "0.15.6",
+    "styled-components": "2.1.2",
+    "sw-precache": "^5.2.0"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.13"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build && sw-precache --root='build/' --static-file-globs='build/**/!(*map*)'",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
