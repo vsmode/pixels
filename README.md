@@ -1,4 +1,4 @@
-# ![P I X E L S](https://avatars0.githubusercontent.com/u/29822952?v=4&s=16) P I X E L S
+# ![P I X E L S](https://avatars0.githubusercontent.com/u/29822952?v=4&s=22) P I X E L S
 
 A minimal cross-platform pixel editor. 
 
