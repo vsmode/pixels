@@ -37,7 +37,7 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
 'use strict';
 
-var precacheConfig = [["asset-manifest.json","c709c16815016e6ad1b68e3fc1f80362"],["favicon.ico","fd73a6eb26a08ee46e7fd3cc34e7f6bf"],["index.html","a7375b2bdd522ca284aa06f42166b654"],["manifest.json","71ad0a96b851e4d0ae7f70193d4a63f9"],["static/js/main.2aea3155.js","a94f3ce866c89fbaa15749d829e1e822"]];
+var precacheConfig = [["asset-manifest.json","c709c16815016e6ad1b68e3fc1f80362"],["favicon-114.png","28c710b625e0ad793cbcf448d0e9c2b6"],["favicon-120.png","217f363930ee22ec05d2fa107b480c84"],["favicon-144.png","f426d617584df470942ce4684d6de789"],["favicon-152.png","7686ea3bc73e410b08d3ea87d8569803"],["favicon-180.png","33bc494de6be41e0bb7ca5bb532c5c59"],["favicon-192.png","aa0cf81a814ced7854c48a7899658e1a"],["favicon-32.png","74925c0833a83df55bcd52a766b34a44"],["favicon-36.png","a84affebdd73590392f7b08ea3dcf9f5"],["favicon-48.png","c3e74f396e05923acf3af8d202fe6e33"],["favicon-57.png","92a1ff48eab17421930bb33d4f740cb1"],["favicon-60.png","5c244bf8e15f2c459ae20310adc2e4eb"],["favicon-72.png","20f5912be652aa18a5161c5bf25cd378"],["favicon-76.png","36e492d0f7d58ef6fbaf9270d0d1bbe1"],["favicon-96.png","9954d405d831e3d056b84058b2ed14c1"],["favicon.ico","0b109472a3868151e328bcee474c317d"],["index.html","6290156691d6d7bd41fe1d2b94ef682c"],["manifest.json","7b8a47b71d77d951f1b6febc4059f66b"],["static/js/main.2aea3155.js","a94f3ce866c89fbaa15749d829e1e822"]];
 var cacheName = 'sw-precache-v3-sw-precache-' + (self.registration ? self.registration.scope : '');
 
 
