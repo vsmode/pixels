@@ -1,6 +1,6 @@
 # ![P I X E L S](https://avatars0.githubusercontent.com/u/29822952?v=4&s=22) P I X E L S
 
-A minimal cross-platform pixel editor. 
+A minimal cross-platform pixel editor.
 
 ## Roadmap
 
