@@ -12,7 +12,7 @@ const ToggleLayerButton = ({ hidden, onClick, ...props }) =>
   React.createElement(Icons[hidden ? 'closedEye' : 'openEye'], {
     width: 32,
     height: 32,
-    style: { cursor: 'pointer', margin: '0 8px' },
+    style: { cursor: 'pointer', marginRight: 8 },
     onClick,
     ...props
   });
@@ -24,6 +24,7 @@ const LayerTitle = styled.input`
   font-size: 14px;
   width: ${LAYER_LIST_WIDTH - 60}px;
   padding: 8px;
+  opacity: 1 !important;
 `;
 
 const FrameWrapper = styled.div`
@@ -98,16 +99,20 @@ const FrameList = styled.div`
   top: 0;
   left: ${LAYER_LIST_WIDTH}px;
   min-width: calc(100% - ${LAYER_LIST_WIDTH}px);
-  width: ${({ width }) => width}px;
+  width: ${({ width }) => width + 8}px;
 `;
 
 const FrameListItem = styled.div`
   display: flex;
   align-items: center;
   height: 48px;
+  padding-left: 100px;
+  margin-right: -100px;
   overflow: hidden;
   cursor: pointer;
   transition: background 0.1s linear;
+  transform: translateX(-100px);
+  border-radius: 0 8px 8px 0;
   background: ${({ active }) => `rgba(0, 0, 0, ${active ? 0.25 : 0})`};
 `;
 
@@ -125,17 +130,19 @@ const LayerList = styled.div`
   position: absolute;
   top: 0;
   left: 0;
+  width: 100vw;
   min-height: 100%;
   will-change: transform;
+  transition: transform 0.1s ease-out;
   background: ${({ theme }) => theme.secondary};
 `;
 
 const LayerListItem = styled.div`
   display: flex;
   align-items: center;
-  width: ${LAYER_LIST_WIDTH}px;
   height: 48px;
-  padding: 0 8px;
+  padding: 0 16px;
+  padding-left: calc(100vw - ${LAYER_LIST_WIDTH}px + 16px);
   cursor: pointer;
   transition: background 0.1s linear;
   background: ${({ active }) => `rgba(0, 0, 0, ${active ? 0.25 : 0})`};
@@ -147,6 +154,7 @@ const LayerActions = styled.div`
   align-items: center;
   height: 48px;
   text-align: center;
+  padding-left: calc(100vw - ${LAYER_LIST_WIDTH}px);
 `;
 
 const LayerActionButton = styled.button`
@@ -190,7 +198,8 @@ export default enhance(
         active={active}
         onScroll={e => {
           const { scrollLeft } = e.target;
-          if (scrollLeft !== left) setLeft(scrollLeft);
+          if (scrollLeft !== left)
+            requestAnimationFrame(() => setLeft(scrollLeft));
         }}
       >
         <FrameList width={totalWidth}>
@@ -233,7 +242,11 @@ export default enhance(
             );
           })}
         </FrameList>
-        <LayerList style={{ transform: `translateX(${left}px)` }}>
+        <LayerList
+          style={{
+            transform: `translateX(calc(-100vw + (${left}px + ${LAYER_LIST_WIDTH}px)))`
+          }}
+        >
           {layers.map(({ hidden, id, name }) => {
             const active = layer === id;
             return (
