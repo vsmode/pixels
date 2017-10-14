@@ -8,26 +8,33 @@ import { lighten } from '../utils';
 
 export const LAYER_LIST_WIDTH = 140;
 
-const ToggleLayerButton = ({ hidden, onClick, ...props }) =>
-  React.createElement(Icons[hidden ? 'closedEye' : 'openEye'], {
-    width: 32,
-    height: 32,
-    style: { cursor: 'pointer', marginRight: 8 },
-    onClick,
-    ...props
-  });
-
-const LayerTitle = styled.input`
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 14px;
-  width: ${LAYER_LIST_WIDTH - 60}px;
-  padding: 8px;
-  opacity: 1 !important;
+const FrameList = styled.div`
+  position: relative;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+  &::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+    border-radius: 6px;
+  }
 `;
 
-const FrameWrapper = styled.div`
+const FrameListItem = styled.div`
+  box-sizing: content-box;
+  display: inline-flex;
+  align-items: center;
+  height: 48px;
+  min-width: 100%;
+  // border-radius: 0 8px 8px 0;
+  // margin-right: 24px;
+  cursor: pointer;
+  transition: background 0.1s linear;
+  background: ${({ active }) => `rgba(0, 0, 0, ${active ? 0.25 : 0})`};
+`;
+
+const FrameThumbnailWrapper = styled.div`
+  flex-shrink: 0; // don't resize
   display: inline-block;
   position: relative;
   width: 32px;
@@ -51,7 +58,7 @@ const FrameThumbnail = ({
   onClick,
   width
 }) => (
-  <FrameWrapper active={active} onClick={onClick}>
+  <FrameThumbnailWrapper active={active} onClick={onClick}>
     <Layer
       visible
       frame={0}
@@ -64,10 +71,11 @@ const FrameThumbnail = ({
       y={0}
       style={{ pointerEvents: 'none', transformOrigin: '0 0', margin: 0 }}
     />
-  </FrameWrapper>
+  </FrameThumbnailWrapper>
 );
 
 const EmptyFrameButton = styled.button`
+  flex-shrink: 0; // don't resize
   display: inline-block;
   position: relative;
   width: 32px;
@@ -94,35 +102,12 @@ const EmptyFrameButton = styled.button`
   }
 `;
 
-const FrameList = styled.div`
-  position: absolute;
-  top: 0;
-  left: ${LAYER_LIST_WIDTH}px;
-  min-width: calc(100% - ${LAYER_LIST_WIDTH}px);
-  width: ${({ width }) => width + 8}px;
-`;
-
-const FrameListItem = styled.div`
-  display: flex;
-  align-items: center;
-  height: 48px;
-  padding-left: 100px;
-  margin-right: -100px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: background 0.1s linear;
-  transform: translateX(-100px);
-  border-radius: 0 8px 8px 0;
-  background: ${({ active }) => `rgba(0, 0, 0, ${active ? 0.25 : 0})`};
-`;
-
 const FrameListScrubber = styled.div`
   position: absolute;
   top: 24px;
   bottom: 24px;
   width: 2px;
   background: ${({ theme }) => theme.tertiary};
-  // box-shadow: 0 0 0 1px ${({ theme }) => theme.tertiary};
   left: ${({ frame }) => 15 + 32 * frame}px;
 `;
 
@@ -130,11 +115,10 @@ const LayerList = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: ${LAYER_LIST_WIDTH}px;
   min-height: 100%;
   will-change: transform;
   transition: transform 0.1s ease-out;
-  background: ${({ theme }) => theme.secondary};
 `;
 
 const LayerListItem = styled.div`
@@ -142,10 +126,27 @@ const LayerListItem = styled.div`
   align-items: center;
   height: 48px;
   padding: 0 16px;
-  padding-left: calc(100vw - ${LAYER_LIST_WIDTH}px + 16px);
   cursor: pointer;
   transition: background 0.1s linear;
   background: ${({ active }) => `rgba(0, 0, 0, ${active ? 0.25 : 0})`};
+`;
+
+const ToggleLayerButton = ({ hidden, onClick, ...props }) =>
+  React.createElement(Icons[hidden ? 'closedEye' : 'openEye'], {
+    width: 32,
+    height: 32,
+    style: { cursor: 'pointer', marginRight: 8 },
+    onClick,
+    ...props
+  });
+
+const LayerTitle = styled.input`
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  padding: 8px;
+  opacity: 1 !important;
 `;
 
 const LayerActions = styled.div`
@@ -154,7 +155,6 @@ const LayerActions = styled.div`
   align-items: center;
   height: 48px;
   text-align: center;
-  padding-left: calc(100vw - ${LAYER_LIST_WIDTH}px);
 `;
 
 const LayerActionButton = styled.button`
@@ -194,15 +194,36 @@ export default enhance(
   }) => {
     const totalWidth = frameCount * 32;
     return (
-      <MenuWrapper
-        active={active}
-        onScroll={e => {
-          const { scrollLeft } = e.target;
-          if (scrollLeft !== left)
-            requestAnimationFrame(() => setLeft(scrollLeft));
-        }}
-      >
-        <FrameList width={totalWidth}>
+      <MenuWrapper active={active} style={{ paddingLeft: LAYER_LIST_WIDTH }}>
+        <LayerList>
+          {layers.map(({ hidden, id, name }) => {
+            const active = layer === id;
+            return (
+              <LayerListItem
+                key={id}
+                active={active}
+                onClick={() => setLayer(id)}
+              >
+                <LayerTitle disabled defaultValue={name} />
+                <ToggleLayerButton
+                  width="20"
+                  height="20"
+                  hidden={hidden}
+                  onClick={e => {
+                    e.stopPropagation();
+                    toggleLayer(id);
+                  }}
+                />
+              </LayerListItem>
+            );
+          })}
+          <LayerActions>
+            <LayerActionButton onClick={() => createLayer()}>
+              ＋ new layer
+            </LayerActionButton>
+          </LayerActions>
+        </LayerList>
+        <FrameList>
           <FrameListScrubber frame={frame} />
           {layers.map(({ id, frames }) => {
             const active = layer === id;
@@ -242,38 +263,6 @@ export default enhance(
             );
           })}
         </FrameList>
-        <LayerList
-          style={{
-            transform: `translateX(calc(-100vw + (${left}px + ${LAYER_LIST_WIDTH}px)))`
-          }}
-        >
-          {layers.map(({ hidden, id, name }) => {
-            const active = layer === id;
-            return (
-              <LayerListItem
-                key={id}
-                active={active}
-                onClick={() => setLayer(id)}
-              >
-                <ToggleLayerButton
-                  width="20"
-                  height="20"
-                  hidden={hidden}
-                  onClick={e => {
-                    e.stopPropagation();
-                    toggleLayer(id);
-                  }}
-                />
-                <LayerTitle disabled defaultValue={name} />
-              </LayerListItem>
-            );
-          })}
-          <LayerActions>
-            <LayerActionButton onClick={() => createLayer()}>
-              ＋ new layer
-            </LayerActionButton>
-          </LayerActions>
-        </LayerList>
       </MenuWrapper>
     );
   }
