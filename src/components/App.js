@@ -8,6 +8,7 @@ import MenuWrapper from './MenuWrapper';
 import ToolMenu from './ToolMenu';
 import LayersMenu from './LayersMenu';
 import DocumentMenu from './DocumentMenu';
+import PreviewMenu from './PreviewMenu';
 import theme from '../theme';
 
 const transformProps = props => {
@@ -33,6 +34,7 @@ export default enhance(props => (
       <ToolbarSection {...props}>
         <ToolMenu active={props.panel === 'tool'} {...props} />
         <LayersMenu active={props.panel === 'layers'} {...props} />
+        <PreviewMenu active={props.panel === 'preview'} {...props} />
         {/* <DocumentMenu active={props.panel === 'document'} {...props} /> */}
       </ToolbarSection>
     </main>

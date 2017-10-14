@@ -39,39 +39,13 @@ export default ({ width, height, frameCount }: initialStateOptions) => ({
         ...Array(frameCount - 1).fill(null)
       ]
     },
-    // {
-    //   id: 1,
-    //   name: 'Layer 2',
-    //   hidden: false,
-    //   frames: [
-    //     new Uint8ClampedArray(4 * width * height),
-    //     ...Array(frameCount - 1).fill(null)
-    //   ]
-    // },
-    // {
-    //   id: 2,
-    //   name: 'Layer 3',
-    //   hidden: false,
-    //   frames: [
-    //     new Uint8ClampedArray(4 * width * height),
-    //     ...Array(frameCount - 1).fill(null)
-    //   ]
-    // },
-    // {
-    //   id: 3,
-    //   name: 'Layer 4',
-    //   hidden: false,
-    //   frames: [
-    //     new Uint8ClampedArray(4 * width * height),
-    //     ...Array(frameCount - 1).fill(null)
-    //   ]
-    // }
   ],
   // @todo preview pane
   preview: {
     fps: 2,
     frame: 0,
-    play: false
+    play: false,
+    loop: true,
   },
 
   // selected tool
@@ -99,7 +73,8 @@ export default ({ width, height, frameCount }: initialStateOptions) => ({
   panel: 'layers',
   panels: {
     // tool: {},
-    layers: {}
+    layers: {},
+    preview: {}
     // document: {},
   },
 

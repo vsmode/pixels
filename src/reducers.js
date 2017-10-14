@@ -23,7 +23,7 @@ export const REDO = (reducers.REDO = (state, length) => {
     layers: state.layers.map(layer => ({
       ...layer,
       // clear pixel buffers
-      frames: layer.frames.map(() => new Uint8ClampedArray(4 * w * h))
+      frames: layer.frames.map(x => x ? new Uint8ClampedArray(4 * w * h) : null)
     }))
   };
   while (n--) {
@@ -48,7 +48,7 @@ export const UNDO = (reducers.UNDO = (state, length) => {
     layers: state.layers.map(layer => ({
       ...layer,
       // clear pixel buffers
-      frames: layer.frames.map(() => new Uint8ClampedArray(4 * w * h))
+      frames: layer.frames.map(x => x ? new Uint8ClampedArray(4 * w * h) : null)
     }))
   };
   while (n--) {

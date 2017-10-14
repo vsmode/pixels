@@ -11,4 +11,5 @@ export default styled.div`
   transition: all 0.5s ease-in-out;
   transform: ${({ active }) => (active ? 'translateY(0)' : 'translateY(50%)')};
   opacity: ${({ active }) => (active ? 1 : 0)};
+  pointer-events: ${({ active }) => (active ? 'all' : 'none')};
 `;
