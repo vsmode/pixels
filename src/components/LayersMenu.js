@@ -145,6 +145,7 @@ const LayerTitle = styled.input`
   border: none;
   color: #fff;
   font-size: 14px;
+  width: 80px;
   padding: 8px;
   opacity: 1 !important;
 `;
