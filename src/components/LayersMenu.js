@@ -4,13 +4,86 @@ import { compose, withState } from 'recompose';
 import Layer from './Layer';
 import MenuWrapper from './MenuWrapper';
 import * as Icons from './Icons';
-import { lighten } from '../utils';
+import { lighten, toRGBA } from '../utils';
 
 export const LAYER_LIST_WIDTH = 140;
+
+const LayerList = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: ${LAYER_LIST_WIDTH}px;
+  min-height: 100%;
+  z-index: 1;
+`;
+
+const LayerListItem = styled.div`
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: background 0.1s linear;
+  background: ${({ active, theme }) =>
+    active
+      ? `linear-gradient(90deg, ${lighten(
+          theme.secondary,
+          -0.25
+        )} ${LAYER_LIST_WIDTH - 24}px, ${toRGBA(
+          lighten(theme.secondary, -0.25),
+          0
+        )})`
+      : `linear-gradient(90deg, ${theme.secondary} ${LAYER_LIST_WIDTH -
+          24}px, ${toRGBA(theme.secondary, 0)})`};
+`;
+
+const ToggleLayerButton = ({ hidden, onClick, ...props }) =>
+  React.createElement(Icons[hidden ? 'closedEye' : 'openEye'], {
+    width: 32,
+    height: 32,
+    style: { cursor: 'pointer', marginRight: 8 },
+    onClick,
+    ...props
+  });
+
+const LayerTitle = styled.input`
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  width: 77px;
+  padding: 8px;
+  opacity: 1 !important;
+`;
+
+const LayerActions = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  text-align: center;
+`;
+
+const LayerActionButton = styled.button`
+  display: block;
+  margin: 16px;
+  padding: 8px;
+  width: 100%;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 10px;
+  box-shadow: 0 0 0 1px #fff;
+  border-radius: 16px;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+`;
 
 const FrameList = styled.div`
   position: relative;
   overflow: auto;
+  padding-bottom: 4px;
   &::-webkit-scrollbar {
     width: 0;
   }
@@ -21,16 +94,18 @@ const FrameList = styled.div`
 `;
 
 const FrameListItem = styled.div`
-  box-sizing: content-box;
+  // box-sizing: content-box;
   display: inline-flex;
   align-items: center;
   height: 48px;
   min-width: 100%;
   // border-radius: 0 8px 8px 0;
   // margin-right: 24px;
+  padding-left: ${LAYER_LIST_WIDTH}px;
   cursor: pointer;
   transition: background 0.1s linear;
-  background: ${({ active }) => `rgba(0, 0, 0, ${active ? 0.25 : 0})`};
+  background: ${({ active, theme }) =>
+    !active ? 'transparent' : lighten(theme.secondary, -0.25)};
 `;
 
 const FrameThumbnailWrapper = styled.div`
@@ -108,70 +183,7 @@ const FrameListScrubber = styled.div`
   bottom: 24px;
   width: 2px;
   background: ${({ theme }) => theme.tertiary};
-  left: ${({ frame }) => 15 + 32 * frame}px;
-`;
-
-const LayerList = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: ${LAYER_LIST_WIDTH}px;
-  min-height: 100%;
-  will-change: transform;
-  transition: transform 0.1s ease-out;
-`;
-
-const LayerListItem = styled.div`
-  display: flex;
-  align-items: center;
-  height: 48px;
-  padding: 0 16px;
-  cursor: pointer;
-  transition: background 0.1s linear;
-  background: ${({ active }) => `rgba(0, 0, 0, ${active ? 0.25 : 0})`};
-`;
-
-const ToggleLayerButton = ({ hidden, onClick, ...props }) =>
-  React.createElement(Icons[hidden ? 'closedEye' : 'openEye'], {
-    width: 32,
-    height: 32,
-    style: { cursor: 'pointer', marginRight: 8 },
-    onClick,
-    ...props
-  });
-
-const LayerTitle = styled.input`
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 14px;
-  width: 80px;
-  padding: 8px;
-  opacity: 1 !important;
-`;
-
-const LayerActions = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 48px;
-  text-align: center;
-`;
-
-const LayerActionButton = styled.button`
-  display: block;
-  margin: 16px;
-  padding: 8px;
-  width: 100%;
-  color: #fff;
-  text-transform: uppercase;
-  font-size: 10px;
-  box-shadow: 0 0 0 1px #fff;
-  border-radius: 16px;
-  background: none;
-  border: none;
-  outline: none;
-  cursor: pointer;
+  left: ${({ frame }) => 15 + 32 * frame + LAYER_LIST_WIDTH}px;
 `;
 
 const enhance = withState('left', 'setLeft', 0);
@@ -195,7 +207,7 @@ export default enhance(
   }) => {
     const totalWidth = frameCount * 32;
     return (
-      <MenuWrapper active={active} style={{ paddingLeft: LAYER_LIST_WIDTH }}>
+      <MenuWrapper active={active}>
         <LayerList>
           {layers.map(({ hidden, id, name }) => {
             const active = layer === id;
@@ -257,6 +269,7 @@ export default enhance(
                       height={32}
                       width={32}
                       onClick={() => setFrame(i)}
+                      onDoubleClick={() => console.log('yolo')}
                     />
                   );
                 })}

@@ -132,6 +132,27 @@ export const lighten = (color, percent) => {
   else return lightenHex(color, percent);
 };
 
+export const toRGBA = (c, a = 1) =>
+  `rgba(${c[0] === '#'
+    ? [
+        c.replace('#', '0x') >> 16,
+        (c.replace('#', '0x') >> 8) & 0xff,
+        c.replace('#', '0x') & 0xff,
+        a
+      ]
+    : [
+        ...c
+          .replace(/\s/, '')
+          .replace('rgba', '')
+          .replace('rgb', '')
+          .replace('(', '')
+          .replace(')', '')
+          .split(',')
+          .map(n => Number(n))
+          .slice(0, 3),
+        a
+      ]})`;
+
 /**
  * Gives back the index of value where predicate returns `true`
  */
