@@ -1,9 +1,15 @@
-import { setPixel, getPixel, indexWhere } from './utils';
+import { compose } from 'recompose';
+import { setPixel, getPixel, indexWhere, toDataURI } from './utils';
 
 const reducers = {};
 
 export const createReducer = r => (s, a) =>
   a && r[a.type] ? r[a.type](s, a.payload, a.meta) : s;
+
+export const createDataURIs = state => ({
+  ...state,
+  dataURIs: toDataURI(state.layers, state.canvas.w, state.canvas.h)
+});
 
 export const BATCH = (reducers.BATCH = (state, actions) => {
   return actions.reduce(
@@ -23,7 +29,9 @@ export const REDO = (reducers.REDO = (state, length) => {
     layers: state.layers.map(layer => ({
       ...layer,
       // clear pixel buffers
-      frames: layer.frames.map(x => x ? new Uint8ClampedArray(4 * w * h) : null)
+      frames: layer.frames.map(
+        x => (x ? new Uint8ClampedArray(4 * w * h) : null)
+      )
     }))
   };
   while (n--) {
@@ -48,7 +56,9 @@ export const UNDO = (reducers.UNDO = (state, length) => {
     layers: state.layers.map(layer => ({
       ...layer,
       // clear pixel buffers
-      frames: layer.frames.map(x => x ? new Uint8ClampedArray(4 * w * h) : null)
+      frames: layer.frames.map(
+        x => (x ? new Uint8ClampedArray(4 * w * h) : null)
+      )
     }))
   };
   while (n--) {
@@ -285,4 +295,4 @@ export const SET_PIXEL = (reducers.SET_PIXEL = (state, payload) => {
 export const UNSET_PIXEL = (reducers.UNSET_PIXEL = (state, payload) =>
   reducers.SET_PIXEL(state, { ...payload, color: [0, 0, 0, 0] }));
 
-export default createReducer(reducers);
+export default compose(createDataURIs, createReducer(reducers));

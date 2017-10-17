@@ -132,6 +132,27 @@ export const lighten = (color, percent) => {
   else return lightenHex(color, percent);
 };
 
+export const toRGBA = (c, a = 1) =>
+  `rgba(${c[0] === '#'
+    ? [
+        c.replace('#', '0x') >> 16,
+        (c.replace('#', '0x') >> 8) & 0xff,
+        c.replace('#', '0x') & 0xff,
+        a
+      ]
+    : [
+        ...c
+          .replace(/\s/, '')
+          .replace('rgba', '')
+          .replace('rgb', '')
+          .replace('(', '')
+          .replace(')', '')
+          .split(',')
+          .map(n => Number(n))
+          .slice(0, 3),
+        a
+      ]})`;
+
 /**
  * Gives back the index of value where predicate returns `true`
  */
@@ -144,4 +165,27 @@ export const indexWhere = (
     if (f(x, i, xs)) return i;
     i++;
   }
+};
+
+export const toDataURI = (ctx => (layers, w, h) =>
+  layers[0].frames.map((_, frame) => {
+    const arrayBufferView = layers
+      .map(x => !x.hidden && x.frames[frame]) // current frame
+      .reduce(
+        (a, b) => (b ? mergePixels(a, b) : a),
+        new Uint8ClampedArray(4 * w * h)
+      );
+    const imgData = new ImageData(arrayBufferView, w, h);
+    ctx.canvas.width = w;
+    ctx.canvas.height = h;
+    ctx.putImageData(imgData, 0, 0);
+    return ctx.canvas.toDataURL();
+  }))(document.createElement('canvas').getContext('2d'));
+
+export const debounce = (cb, ms) => {
+  let timeout = null;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => cb(...args), ms);
+  };
 };

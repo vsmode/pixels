@@ -13,7 +13,7 @@ const store = createStore(
   createInitialState({
     width: 8,
     height: 8,
-    frameCount: 16
+    frameCount: 4
   }),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
