@@ -166,3 +166,26 @@ export const indexWhere = (
     i++;
   }
 };
+
+export const toDataURI = (ctx => (layers, w, h) =>
+  layers[0].frames.map((_, frame) => {
+    const arrayBufferView = layers
+      .map(x => !x.hidden && x.frames[frame]) // current frame
+      .reduce(
+        (a, b) => (b ? mergePixels(a, b) : a),
+        new Uint8ClampedArray(4 * w * h)
+      );
+    const imgData = new ImageData(arrayBufferView, w, h);
+    ctx.canvas.width = w;
+    ctx.canvas.height = h;
+    ctx.putImageData(imgData, 0, 0);
+    return ctx.canvas.toDataURL();
+  }))(document.createElement('canvas').getContext('2d'));
+
+export const debounce = (cb, ms) => {
+  let timeout = null;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => cb(...args), ms);
+  };
+};

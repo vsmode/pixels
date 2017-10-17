@@ -10,6 +10,7 @@ import LayersMenu from './LayersMenu';
 import DocumentMenu from './DocumentMenu';
 import PreviewMenu from './PreviewMenu';
 import theme from '../theme';
+import { toDataURI } from '../utils';
 
 const transformProps = props => {
   return {

@@ -257,6 +257,8 @@ export default enhance(
                       onClick={e => {
                         e.stopPropagation();
                         createFrame(id, i);
+                        setLayer(id);
+                        setFrame(i);
                       }}
                     />
                   ) : (
