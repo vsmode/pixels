@@ -70,7 +70,7 @@ export default ({ width, height, frameCount }: initialStateOptions) => ({
   },
 
   // selected panel
-  panel: 'preview',
+  panel: 'layers',
   panels: {
     // tool: {},
     layers: {},
